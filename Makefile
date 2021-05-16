@@ -1,6 +1,6 @@
 format:
-	isort --virtual-env=./venv/ ./src/
-	black ./src
+	isort --virtual-env=./.venv/ ./src ./tests
+	black ./src ./tests
 
 
 run-prod:
@@ -36,7 +36,7 @@ check-types:
 
 
 check-imports:
-	isort --virtual-env=./venv/ --check-only ./src ./tests
+	isort --virtual-env=./.venv/ --check-only ./src ./tests
 
 
 check-code-style:
@@ -49,8 +49,8 @@ run-static-code-analysis:
 		--max-line-length=79 \
 		./src/ \
 
-	pylint blog db telegram bot src/*.py
+	pylint blog db telegram global_bot src/*.py
 
 
 db:
-	python -m bot.db.migrations
+	python -m db.migrations
