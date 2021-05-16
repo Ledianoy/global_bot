@@ -12,7 +12,6 @@ from bot.config import settings
 from bot.db.work import id_chenal
 from bot.db.work_word import word_check_bd
 from bot.send import delete_message
-
 from bot.telegram.methods import get_webhook_info
 from bot.telegram.methods import set_webhook
 from bot.telegram.types import Update
@@ -23,6 +22,7 @@ from bot.way import process_way
 load_dotenv()
 app = FastAPI()
 templates = Jinja2Templates(directory=settings.index_path)
+
 
 @app.get("/", response_class=HTMLResponse)
 async def handle_index(request: Request):
