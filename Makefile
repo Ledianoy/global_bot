@@ -49,7 +49,7 @@ run-static-code-analysis:
 		--max-line-length=79 \
 		./src/ \
 
-	pylint blog db telegram z43bot src/*.py
+	pylint blog db telegram bot src/*.py
 
 
 db:
