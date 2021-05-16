@@ -1,6 +1,6 @@
 format:
-	isort --virtual-env=./.venv/ ./src ./tests
-	black ./src ./tests
+	isort --virtual-env=./venv/ ./src
+	black ./src
 
 
 run-prod:
@@ -36,7 +36,7 @@ check-types:
 
 
 check-imports:
-	isort --virtual-env=./.venv/ --check-only ./src ./tests
+	isort --virtual-env=./venv/ --check-only ./src ./tests
 
 
 check-code-style:
@@ -53,4 +53,4 @@ run-static-code-analysis:
 
 
 db:
-	python -m src.bot.db.migrations
+	python -m bot.db.migrations
