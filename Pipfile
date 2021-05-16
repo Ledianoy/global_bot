@@ -1,0 +1,46 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asyncpg = "*"
+fastapi = "*"
+jinja2 = "*"
+pydantic = "*"
+python-dotenv = "*"
+python-multipart = "*"
+sqlalchemy = "*"
+isort = "*"
+black = "*"
+
+[dev-packages]
+black = "==20.8b1"
+flake8 = "*"
+flake8-builtins = "*"
+ipython = "*"
+isort = "*"
+mypy = "*"
+pylint = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-mock = "*"
+
+[requires]
+python_version = "3.9"
+
+[packages.aiohttp]
+extras = [ "speedups",]
+version = "*"
+
+[packages.devtools]
+extras = [ "pygments",]
+version = "*"
+
+[packages.uvicorn]
+extras = [ "standard",]
+version = "*"
+
+[dev-packages.coverage]
+extras = [ "toml",]
+version = "*"
