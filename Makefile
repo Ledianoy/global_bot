@@ -53,4 +53,4 @@ run-static-code-analysis:
 
 
 db:
-	python -m db.migrations
+	python -m bot.db.migrations
