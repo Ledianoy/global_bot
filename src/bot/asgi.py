@@ -64,7 +64,7 @@ async def handle_setup_webhook(password: str = Form(...)):
     )
 
 
-@app.post(f"//webhook/{settings.webhook_secret}/")
+@app.post(f"/webhook/{settings.webhook_secret}/")
 async def tg_webhook(update: Update):
     debug(settings)
     try:
