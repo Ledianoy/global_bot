@@ -12,13 +12,11 @@ def test_settings():
         "ADMIN_PASSWORD": "admin_password",
         "BOT_TOKEN": "bot_token",
         "DATABASE_URL": "database_url",
-        "INDEX_PATH" : "index_path",
+        "INDEX_PATH": "index_path",
         "PYTHONPATH": "python_path",
         "SERVICE_URL": "service_url",
         "WEBHOOK_SECRET": "webhook_secret",
     }
-
-
 
     with mock.patch.dict(os.environ, new_env, clear=True):
         settings = Settings()

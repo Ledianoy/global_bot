@@ -1,11 +1,11 @@
 format:
-	isort --virtual-env=./venv/ ./src
-	black ./src
+	isort --virtual-env=./venv/ ./src ./tests
+	black ./src ./tests
 
 
 run-prod:
 	uvicorn \
-		global_bot.asgi:app \
+		bot.asgi:app \
 		--host 0.0.0.0 \
 		--lifespan off \
 		--port $(PORT) \
