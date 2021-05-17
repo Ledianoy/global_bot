@@ -2,37 +2,61 @@ name: QA
 
 on: [push]
 
+env:
+  ADMIN_PASSWORD: "1"
+  BLOG_URL: "http://localhost:8001"
+  BOT_TOKEN: "xxx-token"
+  DATABASE_URL: "postgresql://testuser:testpassword@localhost:5432/testdb"
+  PORT: "8000"
+  PYTHONPATH: "src"
+  SERVICE_URL: "http://localhost:8000"
+  WEBHOOK_SECRET: "wh-secret-xxx"
+
 jobs:
-  run_tests:
-    env:
-      BOT_TOKEN: "xxx-token"
-      PORT: 8000
-      PYTHONPATH: src
-      SERVICE_URL: "http://localhost:8000"
+  full-build-and-qa:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_USER: testuser
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-retries 5
+          --health-timeout 5s
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: pull code from repo
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
         with:
           python-version: '3.9'
           architecture: 'x64'
-      - name: install pipenv
+      - name: set up pipenv
         run: pip install pipenv
-      - name: set up virtual env
-        run: mkdir -p .venv
-      - name: install python to virtualenv
-        run: pipenv --three
-      - name: cache-packages
+      - name: init virtualenv
+        run: |
+          mkdir -p .venv
+          pipenv --three
+      - name: cache packages
+        id: venv-packages-cache
         uses: actions/cache@v2
         with:
-          path: ~/.venv/
+          path: ./.venv/
           key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pipenv-
+            ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
       - name: install packages
-        if: steps.cache-packages.outputs.cache-hit != 'true'
+        if: ${{ !steps.venv-packages-cache.outputs.cache-hit }}
         run: pipenv install --dev
-      - name: run local web server
+      - name: run production web server
         run: pipenv run make run-prod &
-      - name: run tests
+      - name: release
+        run: pipenv run make release
+      - name: qa
         run: pipenv run make qa
