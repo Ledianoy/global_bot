@@ -9,7 +9,7 @@ from bot.config import Settings
 @pytest.mark.asyncio
 def test_settings():
     new_env = {
-        "ADMIN_PASSWORD": "admin_password",
+        "PASSWORD": "admin_password",
         "BOT_TOKEN": "bot_token",
         "DATABASE_URL": "database_url",
         "INDEX_PATH": "index_path",
