@@ -5,6 +5,7 @@ from bot.db.work_user import set_user_auth_state
 from bot.send import delete_message
 from bot.send import send_a_request_user
 from bot.telegram.types import Update
+from bot.way import main_menu
 
 
 async def _info_chenal(update: Update):
@@ -35,19 +36,7 @@ async def _work_info_chenal(update: Update):
         await set_user_auth_state(user_id, 4)
         await _info_on_adding_a_channel(update)
     if text == "exit":
-        await set_user_auth_state(user_id, 2)
-        reply_to_message_id = (
-            "Тебя узнали!\n"
-            "Команды настроек: \n"
-            " 1 : Работа с каналами \n"
-            " 2 : Добавление запрещенного слова"
-        )
-
-        await set_user_auth_state(user_id, 2)
-        await send_a_request_user(
-            chat_id=update.message.chat.id,
-            text=reply_to_message_id,
-        )
+        await main_menu(update)
     if text != "1" and text != "2" and text != "exit" and text != None:
         reply_to_message_id = "Вы ввели неверную команту, повторите ещё раз"
         await send_a_request_user(

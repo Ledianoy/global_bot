@@ -121,6 +121,11 @@ async def _process_password(update: Update):
         )
         return
 
+    await main_menu(update)
+    return
+
+async def main_menu(update: Update):
+    user_id = update.message.from_.id
     reply_to_message_id = (
         "Тебя узнали!\n"
         "Команды настроек: \n"
