@@ -40,12 +40,13 @@ async def process_way(update: Update):
 
     user_id = update.message.from_.id
     state = await get_state(user_id)
-    for key, value in dispatcher_text.items():
-        if key == update.message.text:
-            await value
     for key, value in dispatcher_value.items():
         if key == state.value:
             await value
+    for key, value in dispatcher_text.items():
+        if key == update.message.text:
+            await value
+
     return {"ok": True}
 
 
@@ -65,7 +66,7 @@ async def base(update: Update):
 
 async def exit(update: Update):
     await init_user(update.message.from_.id)
-    await set_user_auth_state(update.message.from_.id)
+    await set_user_auth_state(update.message.from_.id, None)
     reply_to_message_id = "Спасибо за работу!"
     await send_a_request_user(
         chat_id=update.message.chat.id,
@@ -104,7 +105,7 @@ async def _process_password(update: Update):
             "Попробуем ещё раз.\n"
             "Повторно введите команду доступа к базе"
         )
-        await set_user_auth_state(user_id)
+        await set_user_auth_state(user_id,None)
         await send_a_request_user(
             chat_id=update.message.chat.id,
             text=reply_to_message_id,
@@ -139,7 +140,7 @@ async def _choice_of_functionality(update: Update):
 
 async def start(update: Update):
     await init_user(update.message.from_.id)
-    await set_user_auth_state(update.message.from_.id)
+    await set_user_auth_state(update.message.from_.id,None)
     reply_to_message_id = "Функции бота"
     await send_a_request_user(
         chat_id=update.message.chat.id,

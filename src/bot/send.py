@@ -6,6 +6,7 @@ import aiohttp
 from pydantic import BaseModel
 
 from bot.telegram.consts import TELEGRAM_BOT_API
+from bot.telegram.methods import invoke_api_method
 from bot.telegram.types import DeleteMessage
 from bot.telegram.types import Message
 from bot.telegram.types import SendMessage
@@ -25,7 +26,7 @@ async def send_a_request_user(
         text=text,
     )
 
-    await Send_api_telegram("sendMessage", reply, Message)
+    await Send_api_telegram("sendMessage", reply)
     return {"ok": True}
 
 
