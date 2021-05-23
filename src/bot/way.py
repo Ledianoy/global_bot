@@ -9,6 +9,8 @@ from bot.send import send_a_request_user
 from bot.telegram.types import Update
 from bot.way_chenal import _adding_a_channel
 from bot.way_chenal import _all_chenal
+from bot.way_chenal import _dell_chenal
+from bot.way_chenal import _dell_chenal_info
 from bot.way_chenal import _info_chenal
 from bot.way_chenal import _info_on_adding_a_channel
 from bot.way_chenal import _work_info_chenal
@@ -27,6 +29,7 @@ class AuthState(enum.Enum):
     ADDING_A_CHENAL = 5
     ALL_CHENAL = 6
     WORK_INFO_CHENAL = 7
+    DELL_CHENAL = 8
     ADDING_A_WORD = 9
 
 
@@ -39,8 +42,10 @@ async def process_way(update: Update):
         5: _adding_a_channel(update),
         6: _all_chenal(update),
         7: _work_info_chenal(update),
-        8: _info_on_adding_a_word(update),
-        9: _adding_a_word(update),
+        8: _dell_chenal_info(update),
+        9: _dell_chenal(update),
+        10: _info_on_adding_a_word(update),
+        11: _adding_a_word(update),
     }
     dispatcher_text = {
         "/exit": exit(update),

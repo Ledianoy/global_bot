@@ -81,3 +81,13 @@ async def info_chenal(id: int) -> str:
         response = await session.execute(stmt)
         post: Chenal = response.scalars().first()
     return post.chenel_name
+
+
+async def delete_chenal(id: int):
+    stmt = sa.delete(Chenal).where(
+        Chenal.id_chenal == id,
+    )
+    async with begin_session() as session:
+        await session.execute(stmt)
+
+    return

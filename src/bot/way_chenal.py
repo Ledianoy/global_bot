@@ -1,4 +1,6 @@
+from bot.db.work import delete_chenal
 from bot.db.work import get_all_chenal
+from bot.db.work import id_chenal
 from bot.db.work import info_chenal
 from bot.db.work import new_chenal
 from bot.db.work_user import set_user_auth_state
@@ -13,8 +15,9 @@ async def _info_chenal(update: Update):
     user_id = update.message.from_.id
     reply_to_message_id = (
         "Команды настроек: \n"
-        " 1 : Просмотр списка запрещенных канало  \n"
+        " 1 : Просмотр списка запрещенных каналов  \n"
         " 2 : Добавление запрещенного канала \n"
+        " 3 : Удаление канала из списка запрещенных \n"
         " Для возврата в предыдущее меню введите exit"
     )
     await set_user_auth_state(user_id, 7)
@@ -35,14 +38,52 @@ async def _work_info_chenal(update: Update):
     if text == "2":
         await set_user_auth_state(user_id, 4)
         await _info_on_adding_a_channel(update)
+    if text == "3":
+        await set_user_auth_state(user_id, 8)
+        await _dell_chenal_info(update)
     if text == "exit":
         await main_menu(update)
-    if text != "1" and text != "2" and text != "exit" and text != None:
+    if (
+        text != "1"
+        and text != "2"
+        and text != "3"
+        and text != "exit"
+        and text != None
+    ):
         reply_to_message_id = "Вы ввели неверную команту, повторите ещё раз"
         await send_a_request_user(
             chat_id=update.message.chat.id,
             text=reply_to_message_id,
         )
+    return
+
+
+async def _dell_chenal_info(update: Update):
+    assert update.message.from_
+    user_id = update.message.from_.id
+    reply_to_message_id = (
+        "Вы можете удалить телеграм каналы из списока запрещенных.\n"
+        "Для реализации данного действия сделайте репист канал в бота.\n"
+        "Для выхода введите команду exit"
+    )
+    await set_user_auth_state(user_id, 9)
+    await send_a_request_user(
+        chat_id=update.message.chat.id,
+        text=reply_to_message_id,
+    )
+    return
+
+
+async def _dell_chenal(update: Update):
+    if update.message.text == "exit":
+        await _info_chenal(update)
+        return
+    id = update.message.forward_from_chat.id
+    title = update.message.forward_from_chat.title
+    chenal = await id_chenal(id, title)
+    if chenal == True:
+        await delete_chenal(id)
+        await delete_message(update.message.chat.id, update.message.message_id)
     return
 
 
