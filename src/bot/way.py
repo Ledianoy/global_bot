@@ -12,6 +12,7 @@ from bot.way_chenal import _all_chenal
 from bot.way_chenal import _info_chenal
 from bot.way_chenal import _info_on_adding_a_channel
 from bot.way_chenal import _work_info_chenal
+from bot.way_menu import main_menu
 from bot.way_word import _adding_a_word
 from bot.way_word import _info_on_adding_a_word
 
@@ -122,22 +123,6 @@ async def _process_password(update: Update):
         return
 
     await main_menu(update)
-    return
-
-async def main_menu(update: Update):
-    user_id = update.message.from_.id
-    reply_to_message_id = (
-        "Тебя узнали!\n"
-        "Команды настроек: \n"
-        " 1 : Работа с каналами \n"
-        " 2 : Добавление запрещенного слова"
-    )
-
-    await set_user_auth_state(user_id, 2)
-    await send_a_request_user(
-        chat_id=update.message.chat.id,
-        text=reply_to_message_id,
-    )
     return
 
 

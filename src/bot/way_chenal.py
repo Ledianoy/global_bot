@@ -5,7 +5,7 @@ from bot.db.work_user import set_user_auth_state
 from bot.send import delete_message
 from bot.send import send_a_request_user
 from bot.telegram.types import Update
-from bot.way import main_menu
+from bot.way_menu import main_menu
 
 
 async def _info_chenal(update: Update):
