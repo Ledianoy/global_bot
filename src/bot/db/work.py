@@ -1,8 +1,10 @@
 from typing import Any
 from typing import Dict
+from typing import List
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.future import select
 
 from .models import Chenal
 from .session import begin_session
@@ -61,3 +63,21 @@ async def new_chenal(
 
     async with begin_session() as session:
         await session.execute(stmt)
+
+
+async def get_all_chenal() -> List[Chenal]:
+    stmt = sa.select([Chenal.id_chenal, Chenal.chenel_name])
+    async with begin_session() as session:
+        response = await session.execute(stmt)
+        post: Chenal = response.scalars().all()
+    return post
+
+
+async def info_chenal(id: int) -> str:
+    stmt = sa.select(Chenal).where(
+        Chenal.id_chenal == id,
+    )
+    async with begin_session() as session:
+        response = await session.execute(stmt)
+        post: Chenal = response.scalars().first()
+    return post.chenel_name
