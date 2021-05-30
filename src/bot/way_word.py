@@ -81,7 +81,7 @@ async def _info_on_adding_a_word(update: Update):
     user_id = update.message.from_.id
     reply_to_message_id = (
         "Вы можете добавить слово список запрещенных.\n"
-        "Для реализации данного действия напишите слово.\n"
+        "Для реализации данного действия напишите слово, или список слов через запятую.\n"
         "Для выхода введите команду exit"
     )
     await set_user_auth_state(user_id, 12)
@@ -96,8 +96,10 @@ async def _adding_a_word(update: Update):
     if update.message.text == "exit":
         await _info_word(update)
     else:
-        await new_word(update.message.text.upper())
-        await Delete_message(update.message.chat.id, update.message.message_id)
+        list_word = update.message.text.split(",")
+        for i in list_word:
+            await new_word(i.upper())
+            await Delete_message(update.message.chat.id, update.message.message_id)
     return
 
 
