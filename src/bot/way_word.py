@@ -99,7 +99,7 @@ async def _adding_a_word(update: Update):
         list_word = update.message.text.split(",")
         for i in list_word:
             await new_word(i.upper())
-            await Delete_message(update.message.chat.id, update.message.message_id)
+        await Delete_message(update.message.chat.id, update.message.message_id)
     return
 
 
