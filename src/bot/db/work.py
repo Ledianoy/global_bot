@@ -4,7 +4,6 @@ from typing import List
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.future import select
 
 from .models import Chenal
 from .session import begin_session

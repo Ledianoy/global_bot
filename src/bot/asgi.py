@@ -1,3 +1,5 @@
+import asyncio
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import Form
@@ -11,7 +13,8 @@ from starlette.templating import Jinja2Templates
 from bot.config import settings
 from bot.db.work import id_chenal
 from bot.db.work_word import word_check_bd
-from bot.send import delete_message
+from bot.send import Delete_message
+from bot.send import Send_a_request_user
 from bot.telegram.methods import get_webhook_info
 from bot.telegram.methods import set_webhook
 from bot.telegram.types import Update
@@ -87,8 +90,17 @@ async def repost_chanel(update):
             update.message.forward_from_chat.title,
         )
         if chenal_bloc == True:
-            result = await delete_message(
+            result = await Delete_message(
                 update.message.chat.id, update.message.message_id
+            )
+            reply_to_message_id = f"Уважаемый(ая) {update.message.from_.username} Ваш репост удален. Данный телеграм канал запрещенн на терриории РБ"
+            post = await Send_a_request_user(
+                chat_id=update.message.chat.id,
+                text=reply_to_message_id,
+            )
+            await asyncio.sleep(10)
+            result = await Delete_message(
+                update.message.chat.id, post.result["message_id"]
             )
             return result
 
@@ -115,7 +127,7 @@ async def word_check(update: Update):
             word_bloc = await word_check_bd(word.upper())
             i = i + 1
             if word_bloc == True:
-                result = await delete_message(
+                result = await Delete_message(
                     update.message.chat.id, update.message.message_id
                 )
                 return result

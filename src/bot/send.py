@@ -1,20 +1,18 @@
 from typing import Optional
-from typing import Type
 from typing import TypeVar
 
 import aiohttp
 from pydantic import BaseModel
 
 from bot.telegram.consts import TELEGRAM_BOT_API
-from bot.telegram.methods import invoke_api_method
 from bot.telegram.types import DeleteMessage
-from bot.telegram.types import Message
 from bot.telegram.types import SendMessage
+from bot.telegram.types import TelegramResponse
 
 OutputDataT = TypeVar("OutputDataT", bound=BaseModel)
 
 
-async def send_a_request_user(
+async def Send_a_request_user(
     *,
     chat_id: int,
     text: str,
@@ -26,11 +24,11 @@ async def send_a_request_user(
         text=text,
     )
 
-    await Send_api_telegram("sendMessage", reply)
-    return {"ok": True}
+    result = await Send_api_telegram("sendMessage", reply)
+    return result
 
 
-async def delete_message(chat_id: int, message_id: int):
+async def Delete_message(chat_id: int, message_id: int):
     reply_delete = DeleteMessage(
         chat_id=chat_id,
         message_id=message_id,
@@ -44,11 +42,11 @@ async def Send_api_telegram(
     method_name: str,
     data: Optional[BaseModel],
     # output_type: Optional[Type[OutputDataT]],
-):
+) -> Optional[OutputDataT]:
     url = f"{TELEGRAM_BOT_API}/{method_name}"
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=data.dict()) as response:
-            result = await response.json()
-
-    return result
+            payload = await response.json()
+    response_tg = TelegramResponse.parse_obj(payload)
+    return response_tg

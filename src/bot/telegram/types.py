@@ -45,31 +45,6 @@ class LoginUrl(BaseModel):
     bot_username: Optional[str] = Field(...)
 
 
-# class CallbackGame(BaseModel):
-#     user_id: Optional[int] = Field(...)
-#     score: Optional[int] = Field(...)
-#     force: Optional[bool] = Field(...)
-#     disable_edit_message: Optional[bool] = Field(...)
-#     chat_id: Optional[int] = Field(...)
-#     message_id: Optional[int] = Field(...)
-#     inline_message_id: Optional[str] = Field(...)
-#
-#
-# class InlineKeyboardButton(BaseModel):
-#     text: str = Field(...)
-#     # url: Optional[str] = Field(...)
-#     # login_url: Optional[LoginUrl] = Field(...)
-#     callback_data: Optional[str] = Field(...)
-#     # switch_inline_query: Optional[str] = Field(...)
-#     # switch_inline_query_current_chat: Optional[str] = Field(...)
-#     # callback_game: Optional[CallbackGame] = Field(...)
-#     # pay: Optional[bool] = Field(...)
-
-
-# class InlineKeyboardMarkup(BaseModel):
-#     inline_keyboard: InlineKeyboardButton = Field(...)
-
-
 class SendMessage(BaseModel):
     chat_id: int = Field(...)
     text: str = Field(...)

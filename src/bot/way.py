@@ -4,8 +4,9 @@ import os
 from bot.db.work_user import get_user
 from bot.db.work_user import init_user
 from bot.db.work_user import set_user_auth_state
+from bot.send import Delete_message
+from bot.send import Send_a_request_user
 from bot.send import Send_api_telegram
-from bot.send import send_a_request_user
 from bot.telegram.types import Update
 from bot.way_chenal import _adding_a_channel
 from bot.way_chenal import _all_chenal
@@ -15,8 +16,11 @@ from bot.way_chenal import _info_chenal
 from bot.way_chenal import _info_on_adding_a_channel
 from bot.way_chenal import _work_info_chenal
 from bot.way_menu import main_menu
-from bot.way_word import _adding_a_word
+from bot.way_word import _adding_a_word, _dell_word, _dell_word_info
+from bot.way_word import _all_word
 from bot.way_word import _info_on_adding_a_word
+from bot.way_word import _info_word
+from bot.way_word import _work_info_word
 
 
 @enum.unique
@@ -30,7 +34,10 @@ class AuthState(enum.Enum):
     ALL_CHENAL = 6
     WORK_INFO_CHENAL = 7
     DELL_CHENAL = 8
-    ADDING_A_WORD = 9
+    ADDING_A_WORDS = 12
+    ADDING_A_WORD = 13
+    WORK_INFO_WORD = 14
+    DELL_WORD = 16
 
 
 async def process_way(update: Update):
@@ -44,8 +51,13 @@ async def process_way(update: Update):
         7: _work_info_chenal(update),
         8: _dell_chenal_info(update),
         9: _dell_chenal(update),
-        10: _info_on_adding_a_word(update),
-        11: _adding_a_word(update),
+        10: _info_word(update),
+        11: _info_on_adding_a_word(update),
+        12: _adding_a_word(update),
+        13: _all_word(update),
+        14: _work_info_word(update),
+        15: _dell_word_info(update),
+        16: _dell_word(update),
     }
     dispatcher_text = {
         "/exit": exit(update),
@@ -62,7 +74,7 @@ async def process_way(update: Update):
         if key == update.message.text:
             await value
 
-    return {"ok": True}
+    return
 
 
 async def base(update: Update):
@@ -72,22 +84,22 @@ async def base(update: Update):
     if state.name == "UNKNOWN":
         reply_to_message_id = "Введите пароль"
         await set_user_auth_state(user_id, 1)
-        await send_a_request_user(
+        await Send_a_request_user(
             chat_id=update.message.chat.id,
             text=reply_to_message_id,
         )
-        await Send_api_telegram("SendMessage", send_a_request_user)
+        await Send_api_telegram("SendMessage", Send_a_request_user)
 
 
 async def exit(update: Update):
     await init_user(update.message.from_.id)
     await set_user_auth_state(update.message.from_.id, None)
     reply_to_message_id = "Спасибо за работу!"
-    await send_a_request_user(
+    await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
-    await Send_api_telegram("SendMessage", send_a_request_user)
+    await Send_api_telegram("SendMessage", Send_a_request_user)
 
 
 async def get_state(user_id: int) -> AuthState:
@@ -113,7 +125,9 @@ async def _process_password(update: Update):
     if user and password:
         if password == os.getenv("PASSWORD"):
             pass_user = True
-
+            await Delete_message(
+                update.message.chat.id, update.message.message_id
+            )
     if pass_user == False:
         reply_to_message_id = (
             "Аутентификация провалена.\n"
@@ -121,7 +135,7 @@ async def _process_password(update: Update):
             "Повторно введите команду доступа к базе"
         )
         await set_user_auth_state(user_id, None)
-        await send_a_request_user(
+        await Send_a_request_user(
             chat_id=update.message.chat.id,
             text=reply_to_message_id,
         )
@@ -138,16 +152,16 @@ async def _choice_of_functionality(update: Update):
         await set_user_auth_state(user_id, 3)
         await _info_chenal(update)
     if update.message.text == "2":
-        await set_user_auth_state(user_id, 5)
-        await _info_on_adding_a_word(update)
+        await set_user_auth_state(user_id, 10)
+        await _info_word(update)
 
 
 async def start(update: Update):
     await init_user(update.message.from_.id)
     await set_user_auth_state(update.message.from_.id, None)
     reply_to_message_id = "Функции бота"
-    await send_a_request_user(
+    await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
-    m = await Send_api_telegram("SendMessage", send_a_request_user)
+    await Send_api_telegram("SendMessage", Send_a_request_user)

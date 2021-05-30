@@ -4,8 +4,8 @@ from bot.db.work import id_chenal
 from bot.db.work import info_chenal
 from bot.db.work import new_chenal
 from bot.db.work_user import set_user_auth_state
-from bot.send import delete_message
-from bot.send import send_a_request_user
+from bot.send import Delete_message
+from bot.send import Send_a_request_user
 from bot.telegram.types import Update
 from bot.way_menu import main_menu
 
@@ -21,7 +21,7 @@ async def _info_chenal(update: Update):
         " Для возврата в предыдущее меню введите exit"
     )
     await set_user_auth_state(user_id, 7)
-    await send_a_request_user(
+    await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
@@ -51,7 +51,7 @@ async def _work_info_chenal(update: Update):
         and text != None
     ):
         reply_to_message_id = "Вы ввели неверную команту, повторите ещё раз"
-        await send_a_request_user(
+        await Send_a_request_user(
             chat_id=update.message.chat.id,
             text=reply_to_message_id,
         )
@@ -67,7 +67,7 @@ async def _dell_chenal_info(update: Update):
         "Для выхода введите команду exit"
     )
     await set_user_auth_state(user_id, 9)
-    await send_a_request_user(
+    await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
@@ -83,7 +83,7 @@ async def _dell_chenal(update: Update):
     chenal = await id_chenal(id, title)
     if chenal == True:
         await delete_chenal(id)
-        await delete_message(update.message.chat.id, update.message.message_id)
+        await Delete_message(update.message.chat.id, update.message.message_id)
     return
 
 
@@ -93,7 +93,7 @@ async def _all_chenal(update: Update):
     for i in list:
         name_chenal = await info_chenal(i)
         reply_to_message_id += f"{i} - {name_chenal}\n"
-    await send_a_request_user(
+    await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
@@ -113,7 +113,7 @@ async def _info_on_adding_a_channel(update: Update):
         "Для выхода введите команду exit"
     )
     await set_user_auth_state(user_id, 5)
-    await send_a_request_user(
+    await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
@@ -127,5 +127,5 @@ async def _adding_a_channel(update: Update):
         update.message.forward_from_chat.id,
         update.message.forward_from_chat.title,
     )
-    await delete_message(update.message.chat.id, update.message.message_id)
+    await Delete_message(update.message.chat.id, update.message.message_id)
     return

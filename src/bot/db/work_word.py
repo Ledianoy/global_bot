@@ -1,3 +1,5 @@
+from typing import List
+
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
 
@@ -37,3 +39,31 @@ async def new_word(
 
     async with begin_session() as session:
         await session.execute(stmt)
+
+
+async def get_all_word() -> List[Word]:
+    stmt = sa.select([Word.id, Word.zap_word])
+    async with begin_session() as session:
+        response = await session.execute(stmt)
+        post: Word = response.scalars().all()
+    return post
+
+
+async def info_word(id: int) -> str:
+    stmt = sa.select(Word).where(
+        Word.id == id,
+    )
+    async with begin_session() as session:
+        response = await session.execute(stmt)
+        post: Word = response.scalars().first()
+    return post.zap_word
+
+
+async def delete_word(text: str):
+    stmt = sa.delete(Word).where(
+        Word.zap_word == text,
+    )
+    async with begin_session() as session:
+        await session.execute(stmt)
+
+    return
