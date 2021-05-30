@@ -12,6 +12,8 @@ from starlette.templating import Jinja2Templates
 
 from bot.config import settings
 from bot.db.work import id_chenal
+from bot.db.work_word import get_all_word
+from bot.db.work_word import info_word
 from bot.db.work_word import word_check_bd
 from bot.send import Delete_message
 from bot.send import Send_a_request_user
@@ -93,7 +95,10 @@ async def repost_chanel(update):
             result = await Delete_message(
                 update.message.chat.id, update.message.message_id
             )
-            reply_to_message_id = f"Уважаемый(ая) {update.message.from_.username} Ваш репост удален. Данный телеграм канал запрещенн на терриории РБ"
+            reply_to_message_id = (
+                f"Уважаемый(ая) {update.message.from_.username} Ваш репост удален. "
+                f"Данный телеграм канал запрещенн на терриории РБ"
+            )
             post = await Send_a_request_user(
                 chat_id=update.message.chat.id,
                 text=reply_to_message_id,
@@ -124,13 +129,49 @@ async def word_check(update: Update):
         i = 0
         while i <= len(list_word):
             word = list_word[i]
-            word_bloc = await word_check_bd(word.upper())
+            word_bloc = await word_analysis(word.upper())
             i = i + 1
             if word_bloc == True:
                 result = await Delete_message(
                     update.message.chat.id, update.message.message_id
                 )
-                return result
+                reply_to_message_id = (
+                    f"Уважаемый(ая) {update.message.from_.username} Ваше сообщение удалено. "
+                    f"Просим Вас не использовать мат в общении. "
+                    f"Спасибо за понимае!"
+                )
+                post = await Send_a_request_user(
+                    chat_id=update.message.chat.id,
+                    text=reply_to_message_id,
+                )
+            await asyncio.sleep(10)
+            result = await Delete_message(
+                update.message.chat.id, post.result["message_id"]
+            )
+            return result
 
     finally:
         return {"ok": True}
+
+
+async def word_analysis(text: str):
+    list_text = list(text)
+    list_id = await get_all_word()
+    for i in list_id:
+        word_bloc = True
+        word = await info_word(i)
+        list_word = list(word)
+        list_prov = []
+        list_key = -1
+        for n in list_word:
+            list_key += 1
+            if n == list_text[list_key]:
+                list_prov.insert(list_key, True)
+            else:
+                list_prov.insert(list_key, False)
+        for d in list_prov:
+            if d == False:
+                word_bloc = False
+        if word_bloc == True:
+            return word_bloc
+    return word_bloc
