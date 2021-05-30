@@ -16,8 +16,10 @@ from bot.way_chenal import _info_chenal
 from bot.way_chenal import _info_on_adding_a_channel
 from bot.way_chenal import _work_info_chenal
 from bot.way_menu import main_menu
-from bot.way_word import _adding_a_word, _dell_word, _dell_word_info
+from bot.way_word import _adding_a_word
 from bot.way_word import _all_word
+from bot.way_word import _dell_word
+from bot.way_word import _dell_word_info
 from bot.way_word import _info_on_adding_a_word
 from bot.way_word import _info_word
 from bot.way_word import _work_info_word

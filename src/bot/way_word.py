@@ -65,7 +65,7 @@ async def _all_word(update: Update):
     for i in list:
         word = await info_word(i)
         reply_to_message_id += f"{numbers} - {word}\n"
-        numbers +=1
+        numbers += 1
     await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
@@ -99,6 +99,7 @@ async def _adding_a_word(update: Update):
         await new_word(update.message.text.upper())
         await Delete_message(update.message.chat.id, update.message.message_id)
     return
+
 
 async def _dell_word_info(update: Update):
     assert update.message.from_
