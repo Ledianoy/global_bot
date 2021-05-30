@@ -33,7 +33,7 @@ async def new_word(
             }
         )
         .on_conflict_do_nothing(
-            index_elements=["zap_word"],
+            index_elements=["id"],
         )
     )
 
