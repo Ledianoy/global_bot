@@ -6,6 +6,7 @@ from bot.db.work import new_chenal
 from bot.db.work_user import set_user_auth_state
 from bot.send import Delete_message
 from bot.send import Send_a_request_user
+from bot.send import Send_a_request_user_2
 from bot.telegram.types import Update
 from bot.way_menu import main_menu
 
@@ -109,7 +110,7 @@ async def _info_on_adding_a_channel(update: Update):
     user_id = update.message.from_.id
     reply_to_message_id = (
         "Вы можете добавить телеграм каналы в список запрещенных.\n"
-        "Для реализации данного действия сделайте репист канал в бота.\n"
+        "Для реализации данного действия сделайте репист канала в бота или вставте Ссылку-приглашение.\n"
         "Для выхода введите команду exit"
     )
     await set_user_auth_state(user_id, 5)
@@ -123,9 +124,22 @@ async def _info_on_adding_a_channel(update: Update):
 async def _adding_a_channel(update: Update):
     if update.message.text == "exit":
         await _info_chenal(update)
+    elif update.message.forward_from_chat == None:
+        text = update.message.text.split("/")
+        if text[0] == "https:":
+
+            info = await Send_a_request_user_2(text[-1])
+            id = info.result["id"]
+            title = info.result["title"]
+    else:
+        id = update.message.forward_from_chat.id
+        title = update.message.forward_from_chat.title
     await new_chenal(
-        update.message.forward_from_chat.id,
-        update.message.forward_from_chat.title,
+        id,
+        title,
     )
     await Delete_message(update.message.chat.id, update.message.message_id)
     return
+
+
+# 1623597928

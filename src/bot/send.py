@@ -28,6 +28,21 @@ async def Send_a_request_user(
     return result
 
 
+async def Send_a_request_user_2(
+    text: str,
+):
+    send = f"getChat?chat_id=@{text}"
+
+    url = f"{TELEGRAM_BOT_API}/{send}"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url) as response:
+            payload = await response.json()
+    response_tg = TelegramResponse.parse_obj(payload)
+
+    return response_tg
+
+
 async def Delete_message(chat_id: int, message_id: int):
     reply_delete = DeleteMessage(
         chat_id=chat_id,

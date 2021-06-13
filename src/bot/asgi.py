@@ -159,23 +159,10 @@ async def word_check(update: Update):
 
 
 async def word_analysis(list_word: list, list_bd_word: list):
-    word_bloc = True
-    for user_word in list_word:
-        list_text_user = list(user_word.upper())
-        for word_bd in list_bd_word:
-            list_text_bd = list(word_bd.upper())
-            list_prov = []
-            list_key = -1
-            for n in list_text_bd:
-                list_key += 1
-                if n == list_text_user[list_key]:
-                    list_prov.insert(list_key, True)
-                else:
-                    list_prov.insert(list_key, False)
-            for d in list_prov:
-                if d == False:
-                    word_bloc = False
-            if word_bloc == True:
-                return word_bloc
+
+    for bd_word in list_bd_word:
+        for user_word in list_word:
+            if bd_word == user_word.upper():
+                return True
 
     return False

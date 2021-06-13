@@ -161,7 +161,12 @@ async def _choice_of_functionality(update: Update):
 async def start(update: Update):
     await init_user(update.message.from_.id)
     await set_user_auth_state(update.message.from_.id, None)
-    reply_to_message_id = "Функции бота"
+    reply_to_message_id = (
+        "Добро пожаловать!\n"
+        "Возможности бота:\n \
+             /base - добавить/удалить запрещенные телеграм каналы и слова.\n \
+             /exit - выход из настроек бота.\n"
+    )
     await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,

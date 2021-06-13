@@ -96,6 +96,7 @@ class Message(BaseModel):
     reply_to_message: Optional["Message"] = Field(None)
     photo: List[PhotoSize] = Field(default_factory=list)
     forward_from_chat: Forward_from_chat = Field(None)
+    forward_from: Optional[User] = Field(None)
 
     class Config:
         fields = {

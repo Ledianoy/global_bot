@@ -50,7 +50,7 @@ async def _work_info_word(update: Update):
         and text != "exit"
         and text != None
     ):
-        reply_to_message_id = "Вы ввели неверную команту, повторите ещё раз"
+        reply_to_message_id = "Вы ввели неверную команду, повторите ещё раз"
         await Send_a_request_user(
             chat_id=update.message.chat.id,
             text=reply_to_message_id,
@@ -65,11 +65,14 @@ async def _all_word(update: Update):
     for i in list:
         word = await info_word(i)
         reply_to_message_id += f"{numbers} - {word}\n"
+        len_message_id = len(reply_to_message_id)
+        if len_message_id >= 4000:
+            await Send_a_request_user(
+                chat_id=update.message.chat.id,
+                text=reply_to_message_id,
+            )
+            reply_to_message_id = ""
         numbers += 1
-    await Send_a_request_user(
-        chat_id=update.message.chat.id,
-        text=reply_to_message_id,
-    )
     user_id = update.message.from_.id
     await set_user_auth_state(user_id, 10)
     await _info_word(update)
@@ -96,7 +99,18 @@ async def _adding_a_word(update: Update):
     if update.message.text == "exit":
         await _info_word(update)
     else:
-        list_word = update.message.text.split(",")
+        list_word = (
+            update.message.text.replace(
+                ";",
+                " ",
+            )
+            .replace(",", " ")
+            .replace(".", " ")
+            .replace("!", " ")
+            .replace("*", " ")
+            .split()
+        )
+        # list_word = update.message.text.split(",")
         for i in list_word:
             await new_word(i.upper())
         await Delete_message(update.message.chat.id, update.message.message_id)
