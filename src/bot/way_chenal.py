@@ -45,11 +45,11 @@ async def _work_info_chenal(update: Update):
     if text == "exit":
         await main_menu(update)
     if (
-        text != "1"
-        and text != "2"
-        and text != "3"
-        and text != "exit"
-        and text != None
+            text != "1"
+            and text != "2"
+            and text != "3"
+            and text != "exit"
+            and text != None
     ):
         reply_to_message_id = "Вы ввели неверную команту, повторите ещё раз"
         await Send_a_request_user(
@@ -135,7 +135,6 @@ async def _adding_a_channel(update: Update):
     elif update.message.forward_from_chat == None:
         text = update.message.text.split("/")
         if text[0] == "https:":
-
             info = await Send_a_request_chat_id(text[-1])
             id = info.result["id"]
             title = info.result["title"]

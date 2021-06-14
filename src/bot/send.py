@@ -3,14 +3,15 @@ from typing import Type
 from typing import TypeVar
 
 import aiohttp
-from aiohttp import ClientResponse
 from pydantic import BaseModel
 from starlette import status
 
 from bot.telegram.consts import TELEGRAM_BOT_API
 from bot.telegram.types import DeleteMessage
 from bot.telegram.types import SendMessage
+from bot.telegram.types import SetWebhook
 from bot.telegram.types import TelegramResponse
+from bot.telegram.types import WebhookInfo
 from bot.util import debug
 
 OutputDataT = TypeVar("OutputDataT", bound=BaseModel)
@@ -90,3 +91,22 @@ async def Send_api_telegram(
         result = output_type.parse_obj(response_tg.result)
 
     return result
+
+
+async def set_webhook(
+    *,
+    url: str,
+) -> None:
+    webhook = SetWebhook(
+        drop_pending_updates=True,
+        url=url,
+    )
+
+    await Send_api_telegram("setWebhook", webhook, None)
+
+
+async def get_webhook_info() -> WebhookInfo:
+    webhook_info = await Send_api_telegram("getWebhookInfo", None, WebhookInfo)
+    assert webhook_info is not None
+
+    return webhook_info

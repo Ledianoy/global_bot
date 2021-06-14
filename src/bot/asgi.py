@@ -17,8 +17,8 @@ from bot.db.work_word import info_word
 from bot.db.work_word import word_check_bd
 from bot.send import Delete_message
 from bot.send import Send_a_request_user
-from bot.telegram.methods import get_webhook_info
-from bot.telegram.methods import set_webhook
+from bot.send import get_webhook_info
+from bot.send import set_webhook
 from bot.telegram.types import Update
 from bot.telegram.util import shadow_webhook_secret
 from bot.util import debug
