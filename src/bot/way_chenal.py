@@ -97,9 +97,11 @@ async def _dell_chenal(update: Update):
 async def _all_chenal(update: Update):
     reply_to_message_id = "Список каналов: \n"
     list = await get_all_chenal()
+    number = 1
     for i in list:
         name_chenal = await info_chenal(i)
-        reply_to_message_id += f"{i} - {name_chenal}\n"
+        reply_to_message_id += f"{number}: {i} - {name_chenal}\n"
+        number +=1
     await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
