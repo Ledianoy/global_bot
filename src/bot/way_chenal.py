@@ -1,12 +1,12 @@
 import asyncio
 
-from bot.db.work import delete_chenal, id_chenal
+from bot.db.work import delete_chenal
 from bot.db.work import get_all_chenal
 from bot.db.work import id_chenal
 from bot.db.work import info_chenal
 from bot.db.work import new_chenal
 from bot.db.work_user import set_user_auth_state
-from bot.send import Delete_message, Send_a_request_user
+from bot.send import Delete_message
 from bot.send import Send_a_request_chat_id
 from bot.send import Send_a_request_user
 from bot.telegram.types import Update
@@ -47,11 +47,11 @@ async def _work_info_chenal(update: Update):
     if text == "exit":
         await main_menu(update)
     if (
-            text != "1"
-            and text != "2"
-            and text != "3"
-            and text != "exit"
-            and text != None
+        text != "1"
+        and text != "2"
+        and text != "3"
+        and text != "exit"
+        and text != None
     ):
         reply_to_message_id = "Вы ввели неверную команту, повторите ещё раз"
         await Send_a_request_user(

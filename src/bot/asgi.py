@@ -77,5 +77,3 @@ async def tg_webhook(update: Update):
 
     finally:
         return {"ok": True}
-
-
