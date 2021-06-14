@@ -78,9 +78,15 @@ async def _dell_chenal_info(update: Update):
 async def _dell_chenal(update: Update):
     if update.message.text == "exit":
         await _info_chenal(update)
-        return
-    id = update.message.forward_from_chat.id
-    title = update.message.forward_from_chat.title
+    elif update.message.forward_from_chat == None:
+        text = update.message.text.split("/")
+        if text[0] == "https:":
+            info = await Send_a_request_user_2(text[-1])
+            id = info.result["id"]
+            title = info.result["title"]
+    else:
+        id = update.message.forward_from_chat.id
+        title = update.message.forward_from_chat.title
     chenal = await id_chenal(id, title)
     if chenal == True:
         await delete_chenal(id)
@@ -140,6 +146,3 @@ async def _adding_a_channel(update: Update):
     )
     await Delete_message(update.message.chat.id, update.message.message_id)
     return
-
-
-# 1623597928
