@@ -101,7 +101,7 @@ async def _all_chenal(update: Update):
     for lists in list_chenal:
         name_chenal = await info_chenal(lists)
         reply_to_message_id += f"{number}: {lists} - {name_chenal}\n"
-        number +=1
+        number += 1
     await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,

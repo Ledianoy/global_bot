@@ -35,7 +35,8 @@ class AuthState(enum.Enum):
     ADDING_A_CHENAL = 5
     ALL_CHENAL = 6
     WORK_INFO_CHENAL = 7
-    DELL_CHENAL = 8
+    DELL_CHENAL_INFO = 8
+    DELL_CHENAL = 9
     ADDING_A_WORDS = 12
     ADDING_A_WORD = 13
     WORK_INFO_WORD = 14
