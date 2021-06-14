@@ -5,8 +5,8 @@ from bot.db.work import info_chenal
 from bot.db.work import new_chenal
 from bot.db.work_user import set_user_auth_state
 from bot.send import Delete_message
+from bot.send import Send_a_request_chat_id
 from bot.send import Send_a_request_user
-from bot.send import Send_a_request_user_2
 from bot.telegram.types import Update
 from bot.way_menu import main_menu
 
@@ -81,7 +81,7 @@ async def _dell_chenal(update: Update):
     elif update.message.forward_from_chat == None:
         text = update.message.text.split("/")
         if text[0] == "https:":
-            info = await Send_a_request_user_2(text[-1])
+            info = await Send_a_request_chat_id(text[-1])
             id = info.result["id"]
             title = info.result["title"]
     else:
@@ -136,7 +136,7 @@ async def _adding_a_channel(update: Update):
         text = update.message.text.split("/")
         if text[0] == "https:":
 
-            info = await Send_a_request_user_2(text[-1])
+            info = await Send_a_request_chat_id(text[-1])
             id = info.result["id"]
             title = info.result["title"]
     else:

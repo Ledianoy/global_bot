@@ -46,8 +46,8 @@ class LoginUrl(BaseModel):
 
 
 class SendMessage(BaseModel):
-    chat_id: int = Field(...)
-    text: str = Field(...)
+    chat_id: Optional[int] = Field(...)
+    text: Optional[str] = Field(...)
     reply_to_message_id: Optional[int] = Field(None)
 
 
