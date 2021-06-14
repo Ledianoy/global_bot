@@ -1,10 +1,12 @@
-from bot.db.work import delete_chenal
+import asyncio
+
+from bot.db.work import delete_chenal, id_chenal
 from bot.db.work import get_all_chenal
 from bot.db.work import id_chenal
 from bot.db.work import info_chenal
 from bot.db.work import new_chenal
 from bot.db.work_user import set_user_auth_state
-from bot.send import Delete_message
+from bot.send import Delete_message, Send_a_request_user
 from bot.send import Send_a_request_chat_id
 from bot.send import Send_a_request_user
 from bot.telegram.types import Update
@@ -147,3 +149,31 @@ async def _adding_a_channel(update: Update):
     )
     await Delete_message(update.message.chat.id, update.message.message_id)
     return
+
+
+async def repost_chanel(update):
+    try:
+        chenal_bloc = await id_chenal(
+            update.message.forward_from_chat.id,
+            update.message.forward_from_chat.title,
+        )
+        if chenal_bloc == True:
+            result = await Delete_message(
+                update.message.chat.id, update.message.message_id
+            )
+            reply_to_message_id = (
+                f"Уважаемый(ая) {update.message.from_.username} Ваш репост удален. "
+                f"Данный телеграм канал запрещенн на терриории РБ"
+            )
+            post = await Send_a_request_user(
+                chat_id=update.message.chat.id,
+                text=reply_to_message_id,
+            )
+            await asyncio.sleep(10)
+            result = await Delete_message(
+                update.message.chat.id, post.result["message_id"]
+            )
+            return result
+
+    finally:
+        return {"ok": True}

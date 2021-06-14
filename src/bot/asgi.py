@@ -1,5 +1,3 @@
-import asyncio
-
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import Form
@@ -11,18 +9,14 @@ from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from bot.config import settings
-from bot.db.work import id_chenal
-from bot.db.work_word import get_all_word
-from bot.db.work_word import info_word
-from bot.db.work_word import word_check_bd
-from bot.send import Delete_message
-from bot.send import Send_a_request_user
 from bot.send import get_webhook_info
 from bot.send import set_webhook
 from bot.telegram.types import Update
 from bot.telegram.util import shadow_webhook_secret
 from bot.util import debug
 from bot.way import process_way
+from bot.way_chenal import repost_chanel
+from bot.way_word import word_check
 
 load_dotenv()
 app = FastAPI()
@@ -85,84 +79,3 @@ async def tg_webhook(update: Update):
         return {"ok": True}
 
 
-async def repost_chanel(update):
-    try:
-        chenal_bloc = await id_chenal(
-            update.message.forward_from_chat.id,
-            update.message.forward_from_chat.title,
-        )
-        if chenal_bloc == True:
-            result = await Delete_message(
-                update.message.chat.id, update.message.message_id
-            )
-            reply_to_message_id = (
-                f"Уважаемый(ая) {update.message.from_.username} Ваш репост удален. "
-                f"Данный телеграм канал запрещенн на терриории РБ"
-            )
-            post = await Send_a_request_user(
-                chat_id=update.message.chat.id,
-                text=reply_to_message_id,
-            )
-            await asyncio.sleep(10)
-            result = await Delete_message(
-                update.message.chat.id, post.result["message_id"]
-            )
-            return result
-
-    finally:
-        return {"ok": True}
-
-
-async def word_check(update: Update):
-    try:
-        list_word = (
-            update.message.text.replace(
-                ";",
-                " ",
-            )
-            .replace(",", " ")
-            .replace(".", " ")
-            .replace("!", " ")
-            .replace("*", " ")
-            .split()
-        )
-        list_bd_id = await get_all_word()
-        list_bd_word = []
-        list_key = 0
-        for i in list_bd_id:
-            word = await info_word(i)
-            list_bd_word.insert(list_key, word)
-            list_key += 1
-
-        result = await word_analysis(list_word, list_bd_word)
-        if result == True:
-            await Delete_message(
-                update.message.chat.id, update.message.message_id
-            )
-            reply_to_message_id = (
-                f"Уважаемый(ая) {update.message.from_.username} Ваше сообщение удалено. "
-                f"Просим Вас не использовать мат в общении. "
-                f"Спасибо за понимае!"
-            )
-            post = await Send_a_request_user(
-                chat_id=update.message.chat.id,
-                text=reply_to_message_id,
-            )
-            await asyncio.sleep(10)
-            result = await Delete_message(
-                update.message.chat.id, post.result["message_id"]
-            )
-        return result
-
-    finally:
-        return {"ok": True}
-
-
-async def word_analysis(list_word: list, list_bd_word: list):
-
-    for bd_word in list_bd_word:
-        for user_word in list_word:
-            if bd_word == user_word.upper():
-                return True
-
-    return False

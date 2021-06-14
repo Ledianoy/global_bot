@@ -1,10 +1,12 @@
+import asyncio
+
 from bot.db.work_user import set_user_auth_state
-from bot.db.work_word import delete_word
+from bot.db.work_word import delete_word, get_all_word, info_word
 from bot.db.work_word import get_all_word
 from bot.db.work_word import info_word
 from bot.db.work_word import new_word
 from bot.db.work_word import word_check_bd
-from bot.send import Delete_message
+from bot.send import Delete_message, Send_a_request_user
 from bot.send import Send_a_request_user
 from bot.telegram.types import Update
 from bot.way_menu import main_menu
@@ -146,3 +148,58 @@ async def _dell_word(update: Update):
                 update.message.chat.id, update.message.message_id
             )
     return
+
+
+async def word_check(update: Update):
+    try:
+        list_word = (
+            update.message.text.replace(
+                ";",
+                " ",
+            )
+            .replace(",", " ")
+            .replace(".", " ")
+            .replace("!", " ")
+            .replace("*", " ")
+            .split()
+        )
+        list_bd_id = await get_all_word()
+        list_bd_word = []
+        list_key = 0
+        for i in list_bd_id:
+            word = await info_word(i)
+            list_bd_word.insert(list_key, word)
+            list_key += 1
+
+        result = await word_analysis(list_word, list_bd_word)
+        if result == True:
+            await Delete_message(
+                update.message.chat.id, update.message.message_id
+            )
+            reply_to_message_id = (
+                f"Уважаемый(ая) {update.message.from_.username} Ваше сообщение удалено. "
+                f"Просим Вас не использовать мат в общении. "
+                f"Спасибо за понимае!"
+            )
+            post = await Send_a_request_user(
+                chat_id=update.message.chat.id,
+                text=reply_to_message_id,
+            )
+            await asyncio.sleep(10)
+            result = await Delete_message(
+                update.message.chat.id, post.result["message_id"]
+            )
+        return result
+
+    finally:
+        return {"ok": True}
+
+
+async def word_analysis(list_word: list, list_bd_word: list):
+
+    for bd_word in list_bd_word:
+        for user_word in list_word:
+            if bd_word == user_word.upper():
+                return True
+
+    return False
