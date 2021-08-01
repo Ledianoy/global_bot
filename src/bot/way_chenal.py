@@ -1,4 +1,7 @@
 import asyncio
+import subprocess
+
+import docx
 
 from bot.db.work import delete_chenal
 from bot.db.work import get_all_chenal
@@ -134,7 +137,7 @@ async def _info_on_adding_a_channel(update: Update):
 async def _adding_a_channel(update: Update):
     if update.message.text == "exit":
         await _info_chenal(update)
-    elif update.message.forward_from_chat == None:
+    elif update.message.forward_from_chat is None:
         text = update.message.text.split("/")
         if text[0] == "https:":
             info = await Send_a_request_chat_id(text[-1])
@@ -177,3 +180,46 @@ async def repost_chanel(update):
 
     finally:
         return {"ok": True}
+
+
+async def api_chenel(update):
+    filename = ("http://mininform.gov.by/upload/iblock/415/415638ea559e95719dcd46fae2e54fcc.doc")
+    file = subprocess.call(['soffice', '--headless', '--convert-to', 'docx', filename])
+    wordDoc = docx.Document("415638ea559e95719dcd46fae2e54fcc.docx")
+    allText = []
+    for table in wordDoc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                allText.append(cell.text)
+    urltme = []
+    for text_len in allText:
+        list_word = (
+            text_len.replace(
+                ";",
+                " ",
+            )
+            .replace(",", " ")
+            .replace("!", " ")
+            .replace("*", " ")
+            .split()
+        )
+        for text in list_word:
+            temp = len(text)
+            if temp > 10:
+                temp_text = text[0:12]
+                if temp_text == "https://t.me":
+                    if text[-1] == ".":
+                        url_len = len(text)
+                        urltme.append(text[0:url_len-1])
+                    else:
+                        urltme.append(text)
+    for url in urltme:
+        info = await Send_a_request_chat_id(url)
+        id = info.result["id"]
+        title = info.result["title"]
+        await new_chenal(
+        id,
+        title,
+        )
+    a = urltme
+    return

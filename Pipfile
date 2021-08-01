@@ -13,6 +13,8 @@ python-multipart = "*"
 sqlalchemy = "*"
 isort = "*"
 black = "==21.5b1"
+pywin32 = "==301"
+python-docx = "*"
 
 [dev-packages]
 black = "==21.5b1"
