@@ -100,7 +100,7 @@ async def _dell_chenal(update: Update):
 
 
 async def _all_chenal(update: Update):
-    await api_chenel(update)
+    # await api_chenel(update)
     reply_to_message_id = "Список каналов: \n"
     list_chenal = await get_all_chenal()
     number = 1
