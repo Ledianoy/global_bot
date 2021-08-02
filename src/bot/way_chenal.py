@@ -100,13 +100,20 @@ async def _dell_chenal(update: Update):
 
 
 async def _all_chenal(update: Update):
-    # await api_chenel(update)
+    await api_chenel(update)
     reply_to_message_id = "Список каналов: \n"
     list_chenal = await get_all_chenal()
     number = 1
     for lists in list_chenal:
         name_chenal = await info_chenal(lists)
         reply_to_message_id += f"{number}: {lists} - {name_chenal}\n"
+        len_message_id = len(reply_to_message_id)
+        if len_message_id >= 4000:
+            await Send_a_request_user(
+                chat_id=update.message.chat.id,
+                text=reply_to_message_id,
+            )
+            reply_to_message_id = ""
         number += 1
     await Send_a_request_user(
         chat_id=update.message.chat.id,
@@ -215,12 +222,11 @@ async def api_chenel(update):
                     else:
                         urltme.append(text)
     for url in urltme:
-        info = await Send_a_request_chat_id(url)
-        id = info.result["id"]
-        title = info.result["title"]
-        await new_chenal(
-        id,
-        title,
-        )
+        text = url.split("/")
+        if text[0] == "https:":
+            info = await Send_a_request_chat_id(text[-1])
+            id = info.result["id"]
+            title = info.result["title"]
+            await new_chenal(id,title,)
     a = urltme
     return
