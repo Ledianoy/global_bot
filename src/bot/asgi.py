@@ -68,6 +68,7 @@ async def handle_setup_webhook(password: str = Form(...)):
 async def tg_webhook(update: Update):
     debug(settings)
     try:
+        # await api_chenel(update)
         if update.message.chat.type == "private":
             result = await process_way(update)
         if update.message.forward_from_chat is not None:

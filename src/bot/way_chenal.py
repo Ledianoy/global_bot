@@ -223,10 +223,9 @@ async def api_chenel(update):
                         urltme.append(text)
     for url in urltme:
         text = url.split("/")
-        if text[0] == "https:":
-            info = await Send_a_request_chat_id(text[-1])
-            id = info.result["id"]
-            title = info.result["title"]
-            await new_chenal(id,title,)
+        info = await Send_a_request_chat_id(text[-1])
+        id = info.result["id"]
+        title = info.result["title"]
+        await new_chenal(id,title,)
     a = urltme
     return
