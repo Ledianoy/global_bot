@@ -2,9 +2,6 @@ import asyncio
 import os
 
 import docx
-import requests
-
-
 from bot.db.work import delete_chenal
 from bot.db.work import get_all_chenal
 from bot.db.work import id_chenal
@@ -288,8 +285,6 @@ async def api_chenel(update):
 
 
 def save_link(book_link, book_name):
-    the_book = requests.get(book_link, stream=True)
-    with open(book_name, "wb") as f:
-        for chunk in the_book.iter_content(1024 * 1024 * 2):  # 2 MB chunks
-            f.write(chunk)
+    import urllib
+    urllib.request.urlretrieve(book_link, book_name)
     return
