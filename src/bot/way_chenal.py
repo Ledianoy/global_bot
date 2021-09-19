@@ -1,11 +1,8 @@
 import asyncio
 import os
-import subprocess
 import requests
 import docx
-from urllib import request
-from bs4 import BeautifulSoup
-import re
+
 
 from bot.db.work import delete_chenal
 from bot.db.work import get_all_chenal
