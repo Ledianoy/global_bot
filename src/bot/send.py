@@ -3,6 +3,7 @@ from typing import Type
 from typing import TypeVar
 
 import aiohttp
+from aiohttp import ClientResponse
 from pydantic import BaseModel
 from starlette import status
 
@@ -65,25 +66,40 @@ async def Send_api_telegram(
                 json=data.dict(),
             )
         )
-
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, **request_kw) as response:
-            payload = await response.json()
-        if response.status != status.HTTP_200_OK:
-            debug(response)
-            debug(payload)
-            errmsg = (
-                f"method {method_name!r}"
-                f" failed with status {response.status}"
-            )
-            raise RuntimeError(errmsg)
+        response_http: ClientResponse
+        async with session.post(url, **request_kw) as response_http:
+            payload = await response_http.json()
+
+            # if response_http.status != status.HTTP_200_OK:
+            #     result = {"ok" : False}
+            #     payload.update(result)
+            #     return payload
+
+
+    # async with aiohttp.ClientSession() as session:
+    #     async with session.post(url, **request_kw) as response:
+    #         try:
+    #             payload = await response.json()
+    #         except Exception as e:
+    #             payload={}
+    #             return payload
+    #
+    #     if response.status != status.HTTP_200_OK:
+    #         debug(response)
+    #         debug(payload)
+    #         errmsg = (
+    #             f"method {method_name!r}"
+    #             f" failed with status {response.status}"
+    #         )
+    #         raise RuntimeError(errmsg)
 
     response_tg = TelegramResponse.parse_obj(payload)
 
-    if not response_tg.ok:
-        debug(response_tg)
-        errmsg = f"method {method_name!r} failed: {response_tg.result}"
-        raise RuntimeError(errmsg)
+    # if not response_tg.ok:
+    #     debug(response_tg)
+    #     errmsg = f"method {method_name!r} failed: {response_tg.result}"
+    #     raise RuntimeError(errmsg)
 
     result = response_tg
 

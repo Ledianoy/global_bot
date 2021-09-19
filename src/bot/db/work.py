@@ -17,13 +17,17 @@ async def id_chenal(id: int, name: str):
     async with begin_session() as session:
         response = await session.execute(stmt)
         post: Chenal = response.scalars().first()
-    if post.id_chenal == id:
+    if post == None:
+        chenal_bloc = False
+    else:
+        # post.id_chenal == id:
         chenal_bloc = True
         if post.chenel_name != name:
             values = {
                 Chenal.chenel_name: name,
             }
             await _update_name(id, values)
+
     return chenal_bloc
 
 
