@@ -1,8 +1,8 @@
 import asyncio
 import os
-import requests
-import docx
 
+import docx
+import requests
 
 from bot.db.work import delete_chenal
 from bot.db.work import get_all_chenal
@@ -196,18 +196,18 @@ async def repost_chanel(update):
     finally:
         return {"ok": True}
 
+
 async def _registry(update: Update):
     assert update.message.from_
     user_id = update.message.from_.id
-    reply_to_message_id = (
-        "Для анализа республиканского списка экстремистских материалов укажите ссылку на DOC файл."
-    )
+    reply_to_message_id = "Для анализа республиканского списка экстремистских материалов укажите ссылку на DOC файл."
     await set_user_auth_state(user_id, 18)
     await Send_a_request_user(
         chat_id=update.message.chat.id,
         text=reply_to_message_id,
     )
     return
+
 
 async def api_chenel(update):
     if update.message.text == "exit":
@@ -241,7 +241,7 @@ async def api_chenel(update):
                     if temp_text == "https://t.me":
                         if text[-1] == ".":
                             url_len = len(text)
-                            urltme.append(text[0:url_len-1])
+                            urltme.append(text[0 : url_len - 1])
                         else:
                             urltme.append(text)
 
@@ -249,7 +249,7 @@ async def api_chenel(update):
         os.remove(file_docx)
         list_chenal = []
         len_list = len(urltme) - 1
-        while i<= len_list:
+        while i <= len_list:
             url = urltme[i]
             text_url = url.split("/")
             info = await Send_a_request_chat_id(text_url[-1])
@@ -285,9 +285,10 @@ async def api_chenel(update):
         await _info_chenal(update)
     return
 
+
 def save_link(book_link, book_name):
     the_book = requests.get(book_link, stream=True)
-    with open(book_name, 'wb') as f:
-      for chunk in the_book.iter_content(1024 * 1024 * 2):  # 2 MB chunks
-        f.write(chunk)
+    with open(book_name, "wb") as f:
+        for chunk in the_book.iter_content(1024 * 1024 * 2):  # 2 MB chunks
+            f.write(chunk)
     return

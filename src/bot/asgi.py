@@ -15,7 +15,6 @@ from bot.telegram.types import Update
 from bot.telegram.util import shadow_webhook_secret
 from bot.util import debug
 from bot.way import process_way
-from bot.way_chenal import api_chenel
 from bot.way_chenal import repost_chanel
 from bot.way_word import word_check
 
@@ -68,7 +67,6 @@ async def handle_setup_webhook(password: str = Form(...)):
 async def tg_webhook(update: Update):
     debug(settings)
     try:
-
         if update.message.chat.type == "private":
             result = await process_way(update)
         if update.message.forward_from_chat is not None:

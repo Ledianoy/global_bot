@@ -8,13 +8,15 @@ from bot.send import Delete_message
 from bot.send import Send_a_request_user
 from bot.send import Send_api_telegram
 from bot.telegram.types import Update
-from bot.way_chenal import _adding_a_channel, _registry, api_chenel
+from bot.way_chenal import _adding_a_channel
 from bot.way_chenal import _all_chenal
 from bot.way_chenal import _dell_chenal
 from bot.way_chenal import _dell_chenal_info
 from bot.way_chenal import _info_chenal
 from bot.way_chenal import _info_on_adding_a_channel
+from bot.way_chenal import _registry
 from bot.way_chenal import _work_info_chenal
+from bot.way_chenal import api_chenel
 from bot.way_menu import main_menu
 from bot.way_word import _adding_a_word
 from bot.way_word import _all_word
